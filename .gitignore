@@ -1,0 +1,12 @@
+.vscode/
+node_modules/
+.idea/
+.nyc_output/
+npm-debug.log
+.tern-project
+lib/
+temp/
+yarn-error.log
+.DS_Store
+scripts/errors.json
+
