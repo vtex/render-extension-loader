@@ -1,4 +1,9 @@
-
+interface Window {
+  __RENDER_6_RUNTIME__: any,
+  __RUNTIME__: any,
+  $: any,
+  RenderExtensionLoader: any,
+}
 
 class RenderExtensionLoader {
   private account: string
@@ -54,5 +59,5 @@ class RenderExtensionLoader {
     document.head.appendChild(link)
   }
 }
+
 window.RenderExtensionLoader = RenderExtensionLoader
-export default RenderExtensionLoader

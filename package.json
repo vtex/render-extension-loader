@@ -4,10 +4,13 @@
   "description": "Vtex IO render extension loader",
   "main": "lib/index.js",
   "scripts": {
-    "ts": "tsc",
+    "start": "run-p serve watch",
+    "serve": "serve",
+    "build": "tsc",
+    "watch": "tsc --watch",
     "clean": "rimraf lib/",
     "lint": "tsc --noEmit && tslint src/**/*.ts",
-    "prepublish": "run-s clean lint ts"
+    "prepublish": "run-s clean lint build"
   },
   "repository": {
     "type": "git",
@@ -22,11 +25,14 @@
   "dependencies": {
     "axios": "^0.16.2",
     "react-dom": "^16.2.0"
-  }, "devDependencies": {
+  },
+  "devDependencies": {
     "@types/bluebird": "^3.0.37",
     "@types/bluebird-global": "^3.0.1",
     "@types/node": "^7.0.5",
+    "npm-run-all": "^4.1.2",
     "rimraf": "^2.6.1",
+    "serve": "^6.5.1",
     "tslint": "^5.2.0",
     "tslint-config-vtex": "^2.0.0",
     "typescript": "^2.4.2"

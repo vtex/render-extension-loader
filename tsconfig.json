@@ -9,12 +9,12 @@
       "es2015",
       "es2016",
       "es2017",
-      "DOM"
+      "dom"
     ],
     "outDir": "lib",
     "allowJs": false,
     "sourceMap": false,
-    "target": "es2015",
+    "target": "es3",
     "module": "none",
     "noUnusedLocals": true,
     "noUnusedParameters": true,
