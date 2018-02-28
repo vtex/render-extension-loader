@@ -9,20 +9,22 @@ class RenderExtensionLoader {
   private account: string
   private workspace: string
   private path: string
+  private env: string
   private ajax: any
   private styles: string[]
   private scripts: string[]
   private placeholders: Map<string, string>
 
-  constructor({account, workspace, path}) {
+  constructor({account, workspace, path, env}) {
     this.account = account
     this.workspace = workspace
     this.path = path
+    this.env = env || /myvtexdev\.com/.test(window.location.hostname) ? 'myvtexdev' : 'myvtex'
     this.ajax = (window.$ && window.$.get) || window.fetch
   }
 
   public async fetch(locale = 'en-US') {
-    const {placeholders, runtime, styles, scripts} = await this.ajax(`https://${this.workspace}--${this.account}.myvtex.com/legacy-extensions${this.path}?__disableSSR&locale=${locale}`)
+    const {placeholders, runtime, styles, scripts} = await this.ajax(`https://${this.workspace}--${this.account}.${this.env}.com/legacy-extensions${this.path}?__disableSSR&locale=${locale}`)
     this.styles = styles
     this.scripts = scripts
     this.placeholders = placeholders
