@@ -9,37 +9,66 @@ class RenderExtensionLoader {
   private account: string
   private workspace: string
   private path: string
+  private locale: string
   private env: string
-  private ajax: any
+  private verbose: any
+  private get: any
   private styles: string[]
   private scripts: string[]
-  private placeholders: Map<string, string>
 
-  constructor({account, workspace, path, env}) {
+  constructor({account, workspace, path, locale, env, verbose}) {
     this.account = account
     this.workspace = workspace
     this.path = path
+    this.locale = locale || 'en-US'
+    this.verbose = verbose
     this.env = env || /myvtexdev\.com/.test(window.location.hostname) ? 'myvtexdev' : 'myvtex'
-    this.ajax = (window.$ && window.$.get) || window.fetch
+    this.get = (window.$ && window.$.get) || window.fetch && ((url) => window.fetch(url).then(res => res.json()))
+
+    if (!this.get) {
+      throw new Error('Render Extension Loader requires either jQuery.ajax or window.fetch.')
+    }
   }
 
-  public async fetch(locale = 'en-US') {
-    const {placeholders, runtime, styles, scripts} = await this.ajax(`https://${this.workspace}--${this.account}.${this.env}.com/legacy-extensions${this.path}?__disableSSR&locale=${locale}`)
+  public async fetch() {
+    if (this.verbose) {
+      console.time('render-extension-loader:json')
+    }
+    const {runtime, styles, scripts} = await this.get(`https://${this.workspace}--${this.account}.${this.env}.com/legacy-extensions${this.path}?__disableSSR&locale=${this.locale}`)
+    if (this.verbose) {
+      console.timeEnd('render-extension-loader:json')
+    }
     this.styles = styles
     this.scripts = scripts
-    this.placeholders = placeholders
-    window.__RUNTIME__ = Object.assign(runtime, {start: false})
-    this.styles.forEach(this.addStyleToPage)
+    window.__RUNTIME__ = {
+      ...runtime,
+      start: false,
+    }
+    if (this.styles) {
+      this.styles.forEach(this.addStyleToPage)
+    }
+    if (this.verbose) {
+      console.time('render-extension-loader:scripts')
+    }
     await Promise.all(this.scripts.map(this.addScriptToPage))
-    return Object.keys(this.placeholders)
+    if (this.verbose) {
+      console.timeEnd('render-extension-loader:scripts')
+    }
+    return Object.keys(runtime.extensions)
   }
 
   public render(extension, props, element) {
     window.__RUNTIME__.extensions[extension].props = {
       ...window.__RUNTIME__.extensions[extension].props,
-      props,
+      ...props,
     }
-    return window.__RENDER_6_RUNTIME__.render(extension, element)
+    if (this.verbose) {
+      console.time('render-extension-loader:render')
+    }
+    window.__RENDER_6_RUNTIME__.render(extension, element)
+    if (this.verbose) {
+      console.timeEnd('render-extension-loader:render')
+    }
   }
 
   private addScriptToPage(src) {

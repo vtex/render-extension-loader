@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <script src="/lib/render-extension-loader.js"></script>
+    </head>
+    <body>
+        <div id="topbar">loading...</div>
+        <script>
+            var loader = new RenderExtensionLoader({
+                account: 'boticarioqa',
+                workspace: 'guilherme',
+                path: '/topbar',
+                locale: 'pt-BR',
+                verbose: true,
+            })
+            loader.fetch().then(function (data) {
+                console.log(data)
+                const topbar = data[0]
+                loader.render(topbar, {helpOpen: true}, document.getElementById('topbar'))
+            })
+        </script>
+    </body>
+</html>
