@@ -1,0 +1,21 @@
+<html>
+    <head>
+        <script src="/lib/render-extension-loader.js"></script>
+    </head>
+    <body>
+        <div id="getting-started">loading...</div>
+        <script>
+            var loader = new RenderExtensionLoader({
+                account: 'basedevmkp',
+                workspace: 'loader',
+                path: '/render-example',
+                locale: 'pt-BR',
+                verbose: true,
+            })
+            loader.fetch().then(function (data) {
+                console.log(data) // all extension points in this page.
+                loader.render('legacy-getting-started', document.getElementById('getting-started'))
+            })
+        </script>
+    </body>
+</html>

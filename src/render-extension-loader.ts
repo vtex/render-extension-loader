@@ -45,7 +45,7 @@ class RenderExtensionLoader {
     if (this.verbose) {
       console.time('render-extension-loader:json')
     }
-    const {runtime, styles, scripts} = await this.get(`https://${this.workspace}--${this.account}.${this.env}.com/legacy-extensions${this.path}?__disableSSR&locale=${this.locale}`)
+    const {runtime, styles, scripts} = await this.get(`https://${this.workspace}--${this.account}.${this.env}.com/legacy-extensions${this.path}?__disableSSR&locale=${this.locale}&v=3`)
     if (this.verbose) {
       console.timeEnd('render-extension-loader:json')
     }

@@ -1,8 +1,8 @@
 {
   "name": "@vtex/render-extension-loader",
-  "version": "1.0.0",
-  "description": "Vtex IO render extension loader",
-  "main": "lib/index.js",
+  "version": "0.0.0",
+  "description": "VTEX IO Render Extension Loader",
+  "main": "lib/render-extension-loader.js",
   "scripts": {
     "start": "run-p serve watch",
     "serve": "serve",
@@ -16,22 +16,16 @@
     "type": "git",
     "url": "git+https://github.com/vtex/render-extension-loader.git"
   },
-  "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/vtex/render-extension-loader/issues"
   },
   "homepage": "https://github.com/vtex/render-extension-loader#readme",
   "dependencies": {
-    "axios": "^0.16.2",
-    "react-dom": "^16.2.0"
   },
   "devDependencies": {
-    "@types/bluebird": "^3.0.37",
-    "@types/bluebird-global": "^3.0.1",
     "@types/node": "^7.0.5",
     "npm-run-all": "^4.1.2",
-    "rimraf": "^2.6.1",
     "serve": "^6.5.1",
     "tslint": "^5.2.0",
     "tslint-config-vtex": "^2.0.0",
