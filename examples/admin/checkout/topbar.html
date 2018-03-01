@@ -1,6 +1,13 @@
 <html>
     <head>
+        <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
         <script src="/lib/render-extension-loader.js"></script>
+        <style>
+            body, html, #topbar, #render-provider {
+                height: 100%;
+                width: 100%;
+            }
+        </style>
     </head>
     <body>
         <div id="topbar">loading...</div>
@@ -15,7 +22,7 @@
             loader.fetch().then(function (data) {
                 console.log(data)
                 const topbar = data[0]
-                loader.render(topbar, {helpOpen: true}, document.getElementById('topbar'))
+                loader.render(topbar, document.getElementById('topbar'))
             })
         </script>
     </body>

@@ -15,7 +15,7 @@
             loader.fetch().then(function (data) {
                 console.log(data)
                 const buttons = data[0]
-                loader.render(buttons, {}, document.getElementById('checkout-buttons'))
+                loader.render(buttons, document.getElementById('checkout-buttons'))
             })
         </script>
     </body>
