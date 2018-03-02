@@ -10,7 +10,9 @@
     "watch": "tsc --watch",
     "clean": "rimraf lib/",
     "lint": "tsc --noEmit && tslint src/**/*.ts",
-    "prepublish": "run-s clean lint build"
+    "prepublish": "run-s clean lint build",
+    "prereleasy": "npm run lint",
+    "postreleasy": "npm publish --access public"
   },
   "repository": {
     "type": "git",
