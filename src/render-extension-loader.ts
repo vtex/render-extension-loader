@@ -66,6 +66,19 @@ class RenderExtensionLoader {
     return this.runtime
   }
 
+  public update = (runtimeOrUpdateFn) => {
+    if (typeof runtimeOrUpdateFn === 'function') {
+      this.runtime = runtimeOrUpdateFn(this.runtime)
+    } else {
+      this.runtime = {
+        ...this.runtime,
+        ...runtimeOrUpdateFn,
+      }
+    }
+
+    return this.runtime
+  }
+
   public render = (extension, element, props) => {
     if (props) {
       this.runtime.extensions[extension].props = {
