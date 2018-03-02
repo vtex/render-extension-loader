@@ -19,10 +19,9 @@
                 locale: 'pt-BR',
                 verbose: true,
             })
-            loader.fetch().then(function (data) {
-                console.log(data)
-                const topbar = data[0]
-                loader.render(topbar, document.getElementById('topbar'))
+            loader.load().then(function (data) {
+                console.log(data) // runtime
+                loader.render('topbar', document.getElementById('topbar'))
             })
         </script>
     </body>

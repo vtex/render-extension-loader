@@ -11,7 +11,7 @@ class RenderExtensionLoader {
   private workspace: string
   private path: string
   private locale: string
-  private env: string
+  private publicEndpoint: string
   private verbose: any
   private renderMajor: number
   private runtime: any
@@ -19,36 +19,34 @@ class RenderExtensionLoader {
   private styles: string[]
   private scripts: string[]
 
-  constructor({account, workspace, path, locale, env, verbose}) {
+  constructor({account, workspace, path, locale, publicEndpoint, verbose}) {
     this.account = account
     this.workspace = workspace
     this.path = path
     this.locale = locale || 'en-US'
     this.verbose = verbose
-    this.env = env || /myvtexdev\.com/.test(window.location.hostname) ? 'myvtexdev' : 'myvtex'
+    this.publicEndpoint = publicEndpoint || /myvtexdev\.com/.test(window.location.hostname) ? 'myvtexdev.com' : 'myvtex.com'
     this.get = window.$
       ? ((url) => window.$.ajax({url}))
       : window.fetch
         ? ((url) => window.fetch(url).then(res => res.json()))
         : null
-    
+
     if (!window.__RUNTIME__) {
-      window.__RUNTIME__ = {account, workspace}
+      // This is the minimum necessary information for HMR to work and needs to be global.
+      window.__RUNTIME__ = {account, workspace, publicEndpoint}
     }
-    
+
     if (!this.get) {
       throw new Error('Render Extension Loader requires either jQuery.ajax or window.fetch.')
     }
   }
 
-  public fetch = async () => {
-    if (this.verbose) {
-      console.time('render-extension-loader:json')
-    }
-    const {runtime, styles, scripts} = await this.get(`https://${this.workspace}--${this.account}.${this.env}.com/legacy-extensions${this.path}?__disableSSR&locale=${this.locale}&v=3`)
-    if (this.verbose) {
-      console.timeEnd('render-extension-loader:json')
-    }
+  public load = async () => {
+    this.time('render-extension-loader:json')
+    const {runtime, styles, scripts} = await this.get(`https://${this.workspace}--${this.account}.${this.publicEndpoint}/legacy-extensions${this.path}?__disableSSR&locale=${this.locale}&v=3`)
+    this.timeEnd('render-extension-loader:json')
+
     this.renderMajor = runtime.renderMajor || 6
     this.styles = styles
     this.scripts = scripts
@@ -56,17 +54,16 @@ class RenderExtensionLoader {
       ...runtime,
       start: false,
     }
+
     if (this.styles) {
       this.styles.forEach(this.addStyleToPage)
     }
-    if (this.verbose) {
-      console.time('render-extension-loader:scripts')
-    }
+
+    this.time('render-extension-loader:scripts')
     await Promise.all(this.scripts.map(this.addScriptToPage))
-    if (this.verbose) {
-      console.timeEnd('render-extension-loader:scripts')
-    }
-    return Object.keys(runtime.extensions)
+    this.timeEnd('render-extension-loader:scripts')
+
+    return this.runtime
   }
 
   public render = (extension, element, props) => {
@@ -77,16 +74,12 @@ class RenderExtensionLoader {
       }
     }
 
-    if (this.verbose) {
-      console.time('render-extension-loader:render')
-    }
-
+    this.time('render-extension-loader:render')
     const runtime = window[`__RENDER_${this.renderMajor}_RUNTIME__`]
     runtime.render(extension, this.runtime, element)
-    
-    if (this.verbose) {
-      console.timeEnd('render-extension-loader:render')
-    }
+    this.timeEnd('render-extension-loader:render')
+
+    return this.runtime
   }
 
   private getExistingScriptSrcs = () => {
@@ -122,6 +115,18 @@ class RenderExtensionLoader {
     link.type = 'text/css'
     link.rel = 'stylesheet'
     document.head.appendChild(link)
+  }
+
+  private time = (label) => {
+    if (this.verbose) {
+      console.time(label)
+    }
+  }
+
+  private timeEnd = (label) => {
+    if (this.verbose) {
+      console.timeEnd(label)
+    }
   }
 }
 

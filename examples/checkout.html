@@ -12,10 +12,9 @@
                 locale: 'pt-BR',
                 verbose: true,
             })
-            loader.fetch().then(function (data) {
-                console.log(data)
-                const buttons = data[0]
-                loader.render(buttons, document.getElementById('checkout-buttons'))
+            loader.load().then(function (data) {
+                console.log(data) // runtime
+                loader.render('checkout/buttons', document.getElementById('checkout-buttons'))
             })
         </script>
     </body>

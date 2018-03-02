@@ -10,10 +10,12 @@
                 workspace: 'loader',
                 path: '/render-example',
                 locale: 'pt-BR',
+                publicEndpoint: 'myvtexdev.com',
                 verbose: true,
             })
-            loader.fetch().then(function (data) {
-                console.log(data) // all extension points in this page.
+
+            loader.load().then(function (data) {
+                console.log(data) // runtime
                 loader.render('legacy-getting-started', document.getElementById('getting-started'))
             })
         </script>
