@@ -1,10 +1,5 @@
 {
   "compilerOptions": {
-    "types": [
-      "node",
-      "bluebird",
-      "bluebird-global"
-    ],
     "lib": [
       "es2015",
       "es2016",
