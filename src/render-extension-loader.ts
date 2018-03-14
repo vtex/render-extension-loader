@@ -25,7 +25,7 @@ class RenderExtensionLoader {
     this.path = path
     this.locale = locale || 'en-US'
     this.verbose = verbose
-    this.publicEndpoint = publicEndpoint || /myvtexdev\.com/.test(window.location.hostname) ? 'myvtexdev.com' : 'myvtex.com'
+    this.publicEndpoint = publicEndpoint || (/myvtexdev\.com/.test(window.location.hostname) ? 'myvtexdev.com' : 'myvtex.com')
     this.get = window.$
       ? ((url) => window.$.ajax({url}))
       : window.fetch
