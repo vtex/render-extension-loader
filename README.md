@@ -58,7 +58,7 @@ var loader = new RenderExtensionLoader({
     workspace: 'loader',
     path: '/render-example',
     locale: 'pt-BR',
-    publicEdnpoint: 'myvtexdev.com',
+    publicEndpoint: 'myvtexdev.com',
     verbose: true,
 })
 ```
