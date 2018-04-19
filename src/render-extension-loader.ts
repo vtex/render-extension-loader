@@ -143,4 +143,4 @@ class RenderExtensionLoader {
   }
 }
 
-window.RenderExtensionLoader = RenderExtensionLoader
+export default RenderExtensionLoader
