@@ -6,11 +6,9 @@
       "es2017",
       "dom"
     ],
-    "outDir": "lib",
     "allowJs": false,
-    "sourceMap": false,
+    "sourceMap": true,
     "target": "es3",
-    "module": "none",
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "typeRoots": ["node_modules/@types"]
