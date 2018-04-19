@@ -1,9 +1,11 @@
-interface Window {
-  __RENDER_6_RUNTIME__: any,
-  __RENDER_7_RUNTIME__: any,
-  __RUNTIME__: any,
-  $: any,
-  RenderExtensionLoader: any,
+declare global {
+  interface Window {
+    __RENDER_6_RUNTIME__: any,
+    __RENDER_7_RUNTIME__: any,
+    __RUNTIME__: any,
+    $: any,
+    RenderExtensionLoader: any,
+  }
 }
 
 class RenderExtensionLoader {
