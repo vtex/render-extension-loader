@@ -116,10 +116,10 @@ class RenderExtensionLoader {
       }
 
       const script = document.createElement('script')
-      script.src = src
-      script.onload = resolve
-      script.onerror = reject
+      script.onload = () => resolve()
+      script.onerror = () => reject()
       script.async = false
+      script.src = src
       document.head.appendChild(script)
     })
   }
