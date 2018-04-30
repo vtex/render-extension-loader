@@ -1,6 +1,6 @@
 {
   "name": "@vtex/render-extension-loader",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "VTEX IO Render Extension Loader",
   "main": "lib/render-extension-loader.js",
   "browser": "lib/render-extension-loader.js",
