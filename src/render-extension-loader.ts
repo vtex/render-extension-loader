@@ -29,9 +29,16 @@ class RenderExtensionLoader {
     this.verbose = verbose
     this.publicEndpoint = publicEndpoint || (/myvtexdev\.com/.test(window.location.hostname) ? 'myvtexdev.com' : 'myvtex.com')
     this.get = window.$
-      ? ((url) => window.$.ajax({url}))
+      ? ((url) => window.$.ajax({
+          url,
+          xhrFields: {
+            withCredentials: true
+          }
+        }))
       : window.fetch
-        ? ((url) => window.fetch(url).then(res => res.json()))
+        ? ((url) => window.fetch(url, {
+          credentials: 'include'
+        }).then(res => res.json()))
         : null
 
     if (!window.__RUNTIME__) {
