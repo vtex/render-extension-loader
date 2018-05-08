@@ -116,6 +116,7 @@ class RenderExtensionLoader {
       }
 
       const script = document.createElement('script')
+      script.crossOrigin = 'anonymous'
       script.onload = () => resolve()
       script.onerror = () => reject()
       script.async = false
