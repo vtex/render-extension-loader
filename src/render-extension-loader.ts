@@ -15,23 +15,37 @@ class RenderExtensionLoader {
   private locale: string
   private publicEndpoint: string
   private verbose: any
+  private timeout: number
   private renderMajor: number
   private runtime: any
   private get: any
   private styles: string[]
   private scripts: string[]
 
-  constructor({account, workspace, path, locale, publicEndpoint, verbose}) {
+  constructor({account, workspace, path, locale, publicEndpoint, verbose, timeout}) {
     this.account = account
     this.workspace = workspace
     this.path = path
     this.locale = locale || 'en-US'
     this.verbose = verbose
+    this.timeout = timeout
     this.publicEndpoint = publicEndpoint || (/myvtexdev\.com/.test(window.location.hostname) ? 'myvtexdev.com' : 'myvtex.com')
     this.get = window.$
-      ? ((url) => window.$.ajax({url}))
+      ? ((url) => window.$.ajax({url, timeout: this.timeout}))
       : window.fetch
-        ? ((url) => window.fetch(url).then(res => res.json()))
+        ? ((url) => new Promise((resolve, reject) => {
+          const fetchTimeout = setTimeout(() => {
+            reject({ error: 'timeout' })
+          }, this.timeout)
+
+          window.fetch(url)
+            .then(res => {
+              clearTimeout(fetchTimeout)
+              return res
+            })
+            .then(res => res.json())
+            .then(res => resolve(res))
+        }))
         : null
 
     if (!window.__RUNTIME__) {
