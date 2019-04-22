@@ -31,7 +31,10 @@ class RenderExtensionLoader {
     this.timeout = timeout
     this.publicEndpoint = publicEndpoint || (/myvtexdev\.com/.test(window.location.hostname) ? 'myvtexdev.com' : 'myvtex.com')
     this.get = window.$
-      ? ((url) => window.$.ajax({url, timeout: this.timeout}))
+      ? ((url) => window.$.ajax({ url, timeout: this.timeout }).retry({
+        timeout: 2000,
+        times: 2,
+      }))
       : window.fetch
         ? ((url) => new Promise((resolve, reject) => {
           const fetchTimeout = setTimeout(() => {
