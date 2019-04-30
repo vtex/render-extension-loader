@@ -1,3 +1,5 @@
+# :construction: DEPRECATED - Please contact guilherme@vtex.com if you need to use this. :upside_down_face:  
+
 # render-extension-loader
 
 Use render components from the comfort of your client-side code.
