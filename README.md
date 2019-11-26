@@ -67,6 +67,6 @@ var loader = new RenderExtensionLoader({
 
 ### Install
 
-From *unpkg.com*: 
+From *vtexassets.com*: 
 
-https://unpkg.com/@vtex/render-extension-loader/lib/render-extension-loader.js
+https://vtex.vtexassets.com/_v/public/assets/v1/npm/@vtex/render-extension-loader@0.1.6/lib/render-extension-loader.js
