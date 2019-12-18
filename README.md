@@ -1,4 +1,4 @@
-# :construction: DEPRECATED - Please contact guilherme@vtex.com if you need to use this. :upside_down_face:  
+# :construction: DEPRECATED - Please contact guilherme@vtex.com if you need to use this. :upside_down_face:
 
 # render-extension-loader
 
@@ -50,7 +50,7 @@ You can call `loader.render` passing a third argument, `props`, which will trigg
 
 If you're logged in the toolbelt with a `@vtex.com.br` email address, you are automatically configured to use the `staging` environment, which serves all traffic through the alternate `myvtexdev.com` (as opposed to `myvtex.com` for prod traffic).
 
-This means that during development, if you are linking your app in the `staging` environment, you *must* pass the `publicEndpoint` option to `RenderExtensionLoader` with the value of `myvtexdev.com`. Otherwise, your assets will be fetched from the production env and there might be inconsistencies during development, i.e. you will not see changes immediately.
+This means that during development, if you are linking your app in the `staging` environment, you _must_ pass the `publicEndpoint` option to `RenderExtensionLoader` with the value of `myvtexdev.com`. Otherwise, your assets will be fetched from the production env and there might be inconsistencies during development, i.e. you will not see changes immediately.
 
 So, during development simply pass this option to guarantee the loader will point towards the correct public endpoint:
 
@@ -65,8 +65,28 @@ var loader = new RenderExtensionLoader({
 })
 ```
 
+### Getting context and assets only
+
+You can get assets and context without actually fetching files in case you want only the runtime context before loading extension points.
+
+```
+<div id="getting-started"></div>
+<script>
+var loader = new RenderExtensionLoader({
+    account: 'basedevmkp',
+    workspace: 'loader',
+    path: '/render-example',
+    locale: 'pt-BR',
+    verbose: true,
+})
+loader.getRuntimeContext().then(function (data) {
+    console.log(data) // { runtime, styles, scripts }
+})
+</script>
+```
+
 ### Install
 
-From *vtexassets.com*: 
+From _vtexassets.com_:
 
 https://vtex.vtexassets.com/_v/public/assets/v1/npm/@vtex/render-extension-loader@0.1.6/lib/render-extension-loader.js

@@ -78,19 +78,21 @@ class RenderExtensionLoader {
     }
   }
 
-  public load = async () => {
-    this.time('render-extension-loader:json')
-    const { runtime, styles, scripts } = await this.get(
-      `https://${this.workspace}--${this.account}.${this.publicEndpoint}/legacy-extensions${this.path}?__disableSSR&locale=${this.locale}&v=3`
-    )
-    this.timeEnd('render-extension-loader:json')
+  public getRuntimeContext = async () => {
+    if (!this.runtime) {
+      await this.loadExtensionPointsContext()
+    }
 
-    this.renderMajor = runtime.renderMajor || 6
-    this.styles = styles
-    this.scripts = scripts
-    this.runtime = {
-      ...runtime,
-      start: false,
+    return {
+      runtime: this.runtime,
+      scripts: this.scripts,
+      styles: this.styles,
+    }
+  }
+
+  public load = async () => {
+    if (!this.runtime) {
+      await this.loadExtensionPointsContext()
     }
 
     if (this.styles) {
@@ -131,6 +133,27 @@ class RenderExtensionLoader {
     this.timeEnd('render-extension-loader:render')
 
     return this.runtime
+  }
+
+  private loadExtensionPointsContext = async () => {
+    this.time('render-extension-loader:json')
+    const { runtime, styles, scripts } = await this.get(
+      `https://${this.workspace}--${this.account}.${this.publicEndpoint}/legacy-extensions${this.path}?__disableSSR&locale=${this.locale}&v=3`
+    )
+    this.timeEnd('render-extension-loader:json')
+
+    this.setGlobalContext({ runtime, styles, scripts })
+    return { runtime, styles, scripts }
+  }
+
+  private setGlobalContext = ({ runtime, styles, scripts }) => {
+    this.renderMajor = runtime.renderMajor || 6
+    this.styles = styles
+    this.scripts = scripts
+    this.runtime = {
+      ...runtime,
+      start: false,
+    }
   }
 
   private getExistingScriptSrcs = () => {
