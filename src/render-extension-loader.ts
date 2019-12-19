@@ -1,10 +1,10 @@
 declare global {
   interface Window {
-    __RENDER_6_RUNTIME__: any,
-    __RENDER_7_RUNTIME__: any,
-    __RUNTIME__: any,
-    $: any,
-    RenderExtensionLoader: any,
+    __RENDER_6_RUNTIME__: any
+    __RENDER_7_RUNTIME__: any
+    __RUNTIME__: any
+    $: any
+    RenderExtensionLoader: any
   }
 }
 
@@ -22,56 +22,77 @@ class RenderExtensionLoader {
   private styles: string[]
   private scripts: string[]
 
-  constructor({account, workspace, path, locale, publicEndpoint, verbose, timeout}) {
+  constructor({
+    account,
+    workspace,
+    path,
+    locale,
+    publicEndpoint,
+    verbose,
+    timeout,
+  }) {
     this.account = account
     this.workspace = workspace
     this.path = path
     this.locale = locale || 'en-US'
     this.verbose = verbose
     this.timeout = timeout
-    this.publicEndpoint = publicEndpoint || (/myvtexdev\.com/.test(window.location.hostname) ? 'myvtexdev.com' : 'myvtex.com')
+    this.publicEndpoint =
+      publicEndpoint ||
+      (/myvtexdev\.com/.test(window.location.hostname)
+        ? 'myvtexdev.com'
+        : 'myvtex.com')
     this.get = window.$
-      ? ((url) => window.$.ajax({ url, timeout: this.timeout }).retry({
-        timeout: 2000,
-        times: 2,
-      }))
+      ? url =>
+          window.$.ajax({ url, timeout: this.timeout }).retry({
+            timeout: 2000,
+            times: 2,
+          })
       : window.fetch
-        ? ((url) => new Promise((resolve, reject) => {
-          const fetchTimeout = setTimeout(() => {
-            reject({ error: 'timeout' })
-          }, this.timeout)
+      ? url =>
+          new Promise((resolve, reject) => {
+            const fetchTimeout = setTimeout(() => {
+              reject({ error: 'timeout' })
+            }, this.timeout)
 
-          window.fetch(url)
-            .then(res => {
-              clearTimeout(fetchTimeout)
-              return res
-            })
-            .then(res => res.json())
-            .then(res => resolve(res))
-        }))
-        : null
+            window
+              .fetch(url)
+              .then(res => {
+                clearTimeout(fetchTimeout)
+                return res
+              })
+              .then(res => res.json())
+              .then(res => resolve(res))
+          })
+      : null
 
     if (!window.__RUNTIME__) {
       // This is the minimum necessary information for HMR to work and needs to be global.
-      window.__RUNTIME__ = {account, workspace, publicEndpoint}
+      window.__RUNTIME__ = { account, workspace, publicEndpoint }
     }
 
     if (!this.get) {
-      throw new Error('Render Extension Loader requires either jQuery.ajax or window.fetch.')
+      throw new Error(
+        'Render Extension Loader requires either jQuery.ajax or window.fetch.'
+      )
+    }
+  }
+
+  public getRuntimeContext = async () => {
+    if (!this.runtime) {
+      await this.loadExtensionPointsContext()
+    }
+
+    return {
+      runtime: this.runtime,
+      scripts: this.scripts,
+      styles: this.styles,
     }
   }
 
   public load = async () => {
-    this.time('render-extension-loader:json')
-    const {runtime, styles, scripts} = await this.get(`https://${this.workspace}--${this.account}.${this.publicEndpoint}/legacy-extensions${this.path}?__disableSSR&locale=${this.locale}&v=3`)
-    this.timeEnd('render-extension-loader:json')
-
-    this.renderMajor = runtime.renderMajor || 6
-    this.styles = styles
-    this.scripts = scripts
-    this.runtime = {
-      ...runtime,
-      start: false,
+    if (!this.runtime) {
+      await this.loadExtensionPointsContext()
     }
 
     if (this.styles) {
@@ -85,7 +106,7 @@ class RenderExtensionLoader {
     return this.runtime
   }
 
-  public update = (runtimeOrUpdateFn) => {
+  public update = runtimeOrUpdateFn => {
     if (typeof runtimeOrUpdateFn === 'function') {
       this.runtime = runtimeOrUpdateFn(this.runtime)
     } else {
@@ -114,6 +135,27 @@ class RenderExtensionLoader {
     return this.runtime
   }
 
+  private loadExtensionPointsContext = async () => {
+    this.time('render-extension-loader:json')
+    const { runtime, styles, scripts } = await this.get(
+      `https://${this.workspace}--${this.account}.${this.publicEndpoint}/legacy-extensions${this.path}?__disableSSR&locale=${this.locale}&v=3`
+    )
+    this.timeEnd('render-extension-loader:json')
+
+    this.setGlobalContext({ runtime, styles, scripts })
+    return { runtime, styles, scripts }
+  }
+
+  private setGlobalContext = ({ runtime, styles, scripts }) => {
+    this.renderMajor = runtime.renderMajor || 6
+    this.styles = styles
+    this.scripts = scripts
+    this.runtime = {
+      ...runtime,
+      start: false,
+    }
+  }
+
   private getExistingScriptSrcs = () => {
     const paths = []
     for (let i = 0; i < document.scripts.length; i++) {
@@ -122,11 +164,11 @@ class RenderExtensionLoader {
     return paths
   }
 
-  private scriptOnPage = (path) => {
+  private scriptOnPage = path => {
     return this.getExistingScriptSrcs().some(src => src.indexOf(path) !== -1)
   }
 
-  private addScriptToPage = (src) => {
+  private addScriptToPage = src => {
     return new Promise((resolve, reject) => {
       if (this.scriptOnPage(src)) {
         return resolve()
@@ -142,7 +184,7 @@ class RenderExtensionLoader {
     })
   }
 
-  private addStyleToPage = (href) => {
+  private addStyleToPage = href => {
     const link = document.createElement('link')
     link.href = href
     link.type = 'text/css'
@@ -150,13 +192,13 @@ class RenderExtensionLoader {
     document.head.appendChild(link)
   }
 
-  private time = (label) => {
+  private time = label => {
     if (this.verbose) {
       console.time(label)
     }
   }
 
-  private timeEnd = (label) => {
+  private timeEnd = label => {
     if (this.verbose) {
       console.timeEnd(label)
     }

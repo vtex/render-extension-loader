@@ -7,8 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2019-12-19
+
+### Added
+
+- `getRuntimeContext` function to load only runtime information and assets links before actually loading assets.
+
 ## [0.1.8] - 2019-04-22
 
 ### Added
 
-- Retry for ajax requests
+- Retry for ajax requests.
