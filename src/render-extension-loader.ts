@@ -142,6 +142,12 @@ class RenderExtensionLoader {
     )
     this.timeEnd('render-extension-loader:json')
 
+    for (const key in window.__RUNTIME__ || {}) {
+      if (window.__RUNTIME__.hasOwnProperty(key) && runtime[key] === undefined) {
+        runtime[key] = window.__RUNTIME__[key]
+      }
+    }
+
     this.setGlobalContext({ runtime, styles, scripts })
     return { runtime, styles, scripts }
   }
