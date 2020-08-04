@@ -25,6 +25,7 @@
   "homepage": "https://github.com/vtex/render-extension-loader#readme",
   "dependencies": {},
   "devDependencies": {
+    "@types/jquery": "^3.5.1",
     "@types/node": "^7.0.5",
     "npm-run-all": "^4.1.2",
     "rollup": "^0.58.1",
@@ -33,6 +34,6 @@
     "serve": "^6.5.5",
     "tslint": "^5.2.0",
     "tslint-config-vtex": "^2.0.0",
-    "typescript": "^2.4.2"
+    "typescript": "^3.9.7"
   }
 }

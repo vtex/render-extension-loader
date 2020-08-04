@@ -3,8 +3,14 @@ declare global {
     __RENDER_6_RUNTIME__: any
     __RENDER_7_RUNTIME__: any
     __RUNTIME__: any
-    $: any
+    $: typeof import('jquery')
     RenderExtensionLoader: any
+  }
+
+  namespace JQuery {
+    interface jqXHR<TResolve> {
+      retry: (opts: { timeout?: number; times?: number }) => TResolve
+    }
   }
 }
 
@@ -43,13 +49,13 @@ class RenderExtensionLoader {
         ? 'myvtexdev.com'
         : 'myvtex.com')
     this.get = window.$
-      ? url =>
+      ? (url: string) =>
           window.$.ajax({ url, timeout: this.timeout }).retry({
             timeout: 2000,
             times: 2,
           })
       : window.fetch
-      ? url =>
+      ? (url: string) =>
           new Promise((resolve, reject) => {
             const fetchTimeout = setTimeout(() => {
               reject({ error: 'timeout' })
@@ -138,7 +144,7 @@ class RenderExtensionLoader {
   private loadExtensionPointsContext = async () => {
     this.time('render-extension-loader:json')
     const { runtime, styles, scripts } = await this.get(
-      `https://${this.workspace}--${this.account}.${this.publicEndpoint}/legacy-extensions${this.path}?__disableSSR&locale=${this.locale}&v=3`
+      `https://${this.workspace}--${this.account}.${this.publicEndpoint}/legacy-extensions${this.path}?__disableSSR&locale=${this.locale}&v=3&origin=${window.location.hostname}`
     )
     this.timeEnd('render-extension-loader:json')
 
