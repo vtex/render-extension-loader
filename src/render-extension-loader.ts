@@ -8,6 +8,7 @@ declare global {
   }
 
   namespace JQuery {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     interface jqXHR<TResolve> {
       retry: (opts: { timeout?: number; times?: number }) => TResolve
     }
@@ -63,12 +64,13 @@ class RenderExtensionLoader {
 
             window
               .fetch(url)
-              .then(res => {
+              .then((res) => {
                 clearTimeout(fetchTimeout)
+
                 return res
               })
-              .then(res => res.json())
-              .then(res => resolve(res))
+              .then((res) => res.json())
+              .then((res) => resolve(res))
           })
       : null
 
@@ -112,7 +114,7 @@ class RenderExtensionLoader {
     return this.runtime
   }
 
-  public update = runtimeOrUpdateFn => {
+  public update = (runtimeOrUpdateFn) => {
     if (typeof runtimeOrUpdateFn === 'function') {
       this.runtime = runtimeOrUpdateFn(this.runtime)
     } else {
@@ -135,6 +137,7 @@ class RenderExtensionLoader {
 
     this.time('render-extension-loader:render')
     const runtime = window[`__RENDER_${this.renderMajor}_RUNTIME__`]
+
     runtime.render(extension, this.runtime, element)
     this.timeEnd('render-extension-loader:render')
 
@@ -146,15 +149,20 @@ class RenderExtensionLoader {
     const { runtime, styles, scripts } = await this.get(
       `https://${this.workspace}--${this.account}.${this.publicEndpoint}/legacy-extensions${this.path}?__disableSSR&locale=${this.locale}&v=3&origin=${window.location.hostname}`
     )
+
     this.timeEnd('render-extension-loader:json')
 
     for (const key in window.__RUNTIME__ || {}) {
-      if (window.__RUNTIME__.hasOwnProperty(key) && runtime[key] === undefined) {
+      if (
+        Object.prototype.hasOwnProperty.call(window.__RUNTIME__, key) &&
+        runtime[key] === undefined
+      ) {
         runtime[key] = window.__RUNTIME__[key]
       }
     }
 
     this.setGlobalContext({ runtime, styles, scripts })
+
     return { runtime, styles, scripts }
   }
 
@@ -170,23 +178,26 @@ class RenderExtensionLoader {
 
   private getExistingScriptSrcs = () => {
     const paths = []
+
     for (let i = 0; i < document.scripts.length; i++) {
       paths.push(document.scripts.item(i).src)
     }
+
     return paths
   }
 
-  private scriptOnPage = path => {
-    return this.getExistingScriptSrcs().some(src => src.indexOf(path) !== -1)
+  private scriptOnPage = (path) => {
+    return this.getExistingScriptSrcs().some((src) => src.indexOf(path) !== -1)
   }
 
-  private addScriptToPage = src => {
+  private addScriptToPage = (src) => {
     return new Promise((resolve, reject) => {
       if (this.scriptOnPage(src)) {
         return resolve()
       }
 
       const script = document.createElement('script')
+
       script.crossOrigin = 'anonymous'
       script.onload = () => resolve()
       script.onerror = () => reject()
@@ -196,21 +207,22 @@ class RenderExtensionLoader {
     })
   }
 
-  private addStyleToPage = href => {
+  private addStyleToPage = (href) => {
     const link = document.createElement('link')
+
     link.href = href
     link.type = 'text/css'
     link.rel = 'stylesheet'
     document.head.appendChild(link)
   }
 
-  private time = label => {
+  private time = (label) => {
     if (this.verbose) {
       console.time(label)
     }
   }
 
-  private timeEnd = label => {
+  private timeEnd = (label) => {
     if (this.verbose) {
       console.timeEnd(label)
     }

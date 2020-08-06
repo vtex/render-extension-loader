@@ -9,7 +9,7 @@
     "serve": "serve",
     "build": "rollup -c",
     "watch": "rollup -c -w",
-    "lint": "tsc --noEmit && tslint src/**/*.ts",
+    "lint": "tsc --noEmit && eslint .",
     "prepublishOnly": "run-s lint build",
     "prereleasy": "npm run lint",
     "postreleasy": "npm publish --access public"
@@ -26,14 +26,16 @@
   "dependencies": {},
   "devDependencies": {
     "@types/jquery": "^3.5.1",
-    "@types/node": "^7.0.5",
+    "@types/node": "^14.0.27",
+    "@vtex/prettier-config": "^0.3.1",
+    "eslint": "^7.6.0",
+    "eslint-config-vtex": "^12.8.2",
     "npm-run-all": "^4.1.2",
+    "prettier": "^2.0.5",
     "rollup": "^0.58.1",
     "rollup-plugin-typescript2": "^0.13.0",
     "rollup-plugin-uglify": "^3.0.0",
     "serve": "^6.5.5",
-    "tslint": "^5.2.0",
-    "tslint-config-vtex": "^2.0.0",
     "typescript": "^3.9.7"
   }
 }
