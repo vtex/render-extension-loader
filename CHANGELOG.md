@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.2] - 2020-08-06
+### Fixed
+- Include origin to requests in order to bypass cache and avoid CORS issue.
+
 ## [0.2.1] - 2020-06-23
 ### Fixed
 - Add global `__RUNTIME__` data local `runtime`.
