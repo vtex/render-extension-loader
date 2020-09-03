@@ -35,7 +35,7 @@
     "rollup": "^0.58.1",
     "rollup-plugin-typescript2": "^0.13.0",
     "rollup-plugin-uglify": "^3.0.0",
-    "serve": "^6.5.5",
+    "serve": "^10.1.2",
     "typescript": "^3.9.7"
   }
 }
